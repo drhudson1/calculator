@@ -4,6 +4,12 @@ pipeline {
 
     stages {
 
+stage('Confirm Jenkinsfile Version') {
+    steps {
+        echo 'NEW JENKINSFILE LOADED - drhudson1/calculator main branch'
+    }
+}
+
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/drhudson1/calculator.git'
