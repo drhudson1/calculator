@@ -10,6 +10,15 @@ pipeline {
             }
         }
 
+        stage('Verify Files') {
+            steps {
+                bat 'dir'
+                bat 'dir src'
+                bat 'dir src\\main\\java\\com\\example'
+                bat 'dir src\\test\\java\\com\\example'
+            }
+        }
+
         stage('Build') {
             steps {
                 bat 'mvn clean compile'
@@ -37,11 +46,8 @@ pipeline {
     }
 
     post {
-
         always {
-            junit '**/target/surefire-reports/*.xml'
+            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
         }
-
     }
-
 }
