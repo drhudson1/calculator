@@ -4,48 +4,51 @@ pipeline {
 
     stages {
 
-stage('Confirm Jenkinsfile Version') {
-    steps {
-        echo 'NEW JENKINSFILE LOADED - drhudson1/calculator main branch'
-    }
-}
-
-        stage('Checkout') {
+        stage('Confirm Jenkinsfile Version') {
             steps {
-                git branch: 'main', url: 'https://github.com/drhudson1/calculator.git'
+                echo 'NEW JENKINSFILE LOADED - drhudson1/calculator main branch'
             }
         }
 
         stage('Verify Files') {
             steps {
                 bat 'dir'
-                bat 'dir src'
-                bat 'dir src\\main\\java\\com\\example'
-                bat 'dir src\\test\\java\\com\\example'
+                bat 'dir Calculator'
+                bat 'dir Calculator\\src'
+                bat 'dir Calculator\\src\\main\\java\\com\\example'
+                bat 'dir Calculator\\src\\test\\java\\com\\example'
             }
         }
 
         stage('Build') {
             steps {
-                bat 'mvn clean compile'
+                dir('Calculator') {
+                    bat 'mvn clean compile'
+                }
             }
         }
 
         stage('Unit Test') {
             steps {
-                bat 'mvn test'
+                dir('Calculator') {
+                    bat 'mvn test'
+                }
             }
         }
 
         stage('Code Coverage') {
             steps {
-                bat 'mvn jacoco:report'
+                dir('Calculator') {
+                    bat 'mvn jacoco:report'
+                }
             }
         }
 
         stage('Package') {
             steps {
-                bat 'mvn package'
+                dir('Calculator') {
+                    bat 'mvn package'
+                }
             }
         }
 
@@ -53,7 +56,7 @@ stage('Confirm Jenkinsfile Version') {
 
     post {
         always {
-            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+            junit allowEmptyResults: true, testResults: 'Calculator/target/surefire-reports/*.xml'
         }
     }
 }
